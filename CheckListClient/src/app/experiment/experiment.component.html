@@ -1,0 +1,205 @@
+<div class="container">
+    <mat-tab-group (selectedTabChange)="tamir($event)">
+        <mat-tab label="Checklist Stage">
+            <h3 class="text-center" style="text-decoration: underline;">Check List</h3>
+            <mat-vertical-stepper style="background-color: #fafafa;" selectedIndex="0" #stepper id="stepper"
+                (selectionChange)="tam()">
+                <mat-step [completed]="false" class="ps-0">
+                    <div>
+                        <ng-template matStepLabel class="position-relative">
+                            <p class="fs-4 mb-1 fw-bold text-success">Software</p>
+                            <div class="position-absolute top-0 end-0 row align-items-center">
+                            </div>
+                        </ng-template>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                                <table *ngIf="stepper.selectedIndex === 0" mat-table
+                                    [dataSource]="softwareActionsDataSource" class="mat-elevation-z8">
+                                    <ng-container matColumnDef="activity">
+                                        <th mat-header-cell *matHeaderCellDef> <label>Activity</label> </th>
+                                        <td mat-cell *matCellDef="let element">{{element.activity.action}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="approver">
+                                        <th mat-header-cell *matHeaderCellDef> <label> Approver</label></th>
+                                        <td mat-cell *matCellDef="let element"><strong> {{element.activity.approver}}
+                                            </strong></td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="comment">
+                                        <th mat-header-cell *matHeaderCellDef> <label> Comment </label></th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <textarea class="form-control" style="width: 75%;" rows="1"
+                                                (change)="onCommentChange($event, element)">{{element.comment}}</textarea>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="check">
+                                        <th mat-header-cell *matHeaderCellDef> <label>Check</label> </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <div class="form-check checkbox-xl">
+                                                <input class="form-check-input" type="checkbox" value="" id="checkbox-2"
+                                                    [checked]="element.checked" (change)="onCheck(element)"
+                                                    title="Checked by : {{element.checked_by}}, in: {{element.date_checked | date : 'short'}}">
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                </table>
+                                <!-- <mat-paginator style="background-color: #fafafa;" #softwarePaginator
+                                [pageSizeOptions]="[5,10,15]" showFirstLastButtons></mat-paginator> -->
+                            </div>
+                        </div>
+                    </div>
+                </mat-step>
+                <mat-step [completed]="false" class="ps-0">
+                    <ng-template matStepLabel class="position-relative">
+                        <p class="fs-4 mb-1 fw-bold text-success">Hardware</p>
+                        <div class="position-absolute top-0 end-0 row align-items-center">
+                        </div>
+                    </ng-template>
+                    <table *ngIf="stepper.selectedIndex === 1" mat-table [dataSource]="hardwareActionsDataSource"
+                        class="mat-elevation-z8">
+                        <ng-container matColumnDef="activity">
+                            <th mat-header-cell *matHeaderCellDef> <label>Activity</label> </th>
+                            <td mat-cell *matCellDef="let element">{{element.activity.action}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="approver">
+                            <th mat-header-cell *matHeaderCellDef> <label> Approver</label></th>
+                            <td mat-cell *matCellDef="let element"> <strong> {{element.activity.approver}}</strong>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="comment">
+                            <th mat-header-cell *matHeaderCellDef> <label> Comment </label></th>
+                            <td mat-cell *matCellDef="let element">
+                                <textarea class="form-control" style="width: 75%;" rows="1"
+                                    (change)="onCommentChange($event, element)">{{element.comment}}</textarea>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="check">
+                            <th mat-header-cell *matHeaderCellDef> <label>Check</label> </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="form-check checkbox-xl">
+                                    <input class="form-check-input" type="checkbox" value="" id="checkbox-2"
+                                        [checked]="element.checked" (change)="onCheck(element)"
+                                        title="Checked by : {{element.checked_by}}, in: {{element.date_checked | date : 'short'}}">
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <!-- <mat-paginator style="background-color: #fafafa;" #hardwarePaginator [pageSizeOptions]="[5,10,15]"
+                        showFirstLastButtons></mat-paginator> -->
+                </mat-step>
+                <mat-step [completed]="false" class="ps-0">
+                    <ng-template matStepLabel class="position-relative">
+                        <p class="fs-4 mb-1 fw-bold text-success">Operation</p>
+                        <div class="position-absolute top-0 end-0 row align-items-center">
+                        </div>
+                    </ng-template>
+                    <table *ngIf="stepper.selectedIndex === 2" mat-table [dataSource]="operationActionsDataSource"
+                        class="mat-elevation-z8">
+                        <ng-container matColumnDef="activity">
+                            <th mat-header-cell *matHeaderCellDef> <label>Activity</label> </th>
+                            <td mat-cell *matCellDef="let element">{{element.activity.action}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="approver">
+                            <th mat-header-cell *matHeaderCellDef> <label> Approver</label></th>
+                            <td mat-cell *matCellDef="let element"> <strong> {{element.activity.approver}}</strong>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="comment">
+                            <th mat-header-cell *matHeaderCellDef> <label> Comment </label></th>
+                            <td mat-cell *matCellDef="let element">
+                                <textarea class="form-control" style="width: 75%;" rows="1"
+                                    (change)="onCommentChange($event, element)">{{element.comment}}</textarea>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="check">
+                            <th mat-header-cell *matHeaderCellDef> <label>Check</label> </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="form-check checkbox-xl">
+                                    <input class="form-check-input" type="checkbox" value="" id="checkbox-2"
+                                        [checked]="element.checked" (change)="onCheck(element)"
+                                        title="Checked by : {{element.checked_by}}, in: {{element.date_checked | date : 'short'}}">
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <!-- <mat-paginator style="background-color: #fafafa;" #operationPaginator
+                        [pageSizeOptions]="[5,10,15]"></mat-paginator> -->
+
+                </mat-step>
+            </mat-vertical-stepper>
+            <button class="btn btn-primary" style="width: 100%;" (click)="update()"> Submit</button>
+        </mat-tab>
+        <mat-tab label="Calibration Stage">
+            <h3 class="text-center"> Calibration Test Experiments</h3>
+            <div class="row-md-12">
+                <div class="col-md-11 col-sm-11">
+                    <ng-select class="custom" [(ngModel)]="experiment" appendTo="body">
+                        <ng-option *ngFor="let exp of experiments" [value]="exp">
+                            {{exp.name}}</ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-md-1 col-sm-1">
+                    <button (click)="addExperiment(experiment)" class="btn btn-primary"
+                        [disabled]="!experiment">+</button>
+                </div>
+            </div>
+            <div class="row-md-12">
+                <div class="col-md-12">
+                    <br>
+                    <table mat-table [dataSource]="calibrationDataSource" class="mat-elevation-z8">
+
+                        <ng-container matColumnDef="experimentName">
+                            <th mat-header-cell *matHeaderCellDef> <label>Name</label> </th>
+                            <td mat-cell *matCellDef="let element">{{element.soository_exp.name}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Incubator">
+                            <th mat-header-cell *matHeaderCellDef> <label> Incubator</label></th>
+                            <td mat-cell *matCellDef="let element">
+                                {{element.soository_exp.incubators.smart.split('/')[2]}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="experimentDate">
+                            <th mat-header-cell *matHeaderCellDef> <label> Experiment Date</label></th>
+                            <td mat-cell *matCellDef="let element">
+                                {{element.soository_exp.exp_dates.start_date
+                                | date : 'short'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="check">
+                            <th mat-header-cell *matHeaderCellDef> <label>Check</label> </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="form-check checkbox-xl">
+                                    <input class="form-check-input" type="checkbox" value="" id="checkbox-2"
+                                        [checked]="element.chosen" (change)="element.chosen = !element.chosen"
+                                        [disabled]="role != 'admin' && false">
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedCalibrationColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedCalibrationColumns;"></tr>
+
+                    </table>
+                    <mat-paginator style="background-color: #fafafa;" #paginator [pageSizeOptions]="[5,10,15]"
+                        showFirstLastButtons></mat-paginator>
+                    <br>
+                </div>
+            </div>
+            <button class="btn btn-primary col-md-12 col-xs-12 col-lg-12" (click)="updateCalibration()"> Update Calibration
+                Tests</button>
+        </mat-tab>
+    </mat-tab-group>
+</div>

@@ -1,0 +1,14 @@
+table {
+  width: 100%;
+}
+
+th {
+  background-color: #ffc519;
+  color: black;
+  font-weight: bold;
+}
+
+.exptable:hover {
+  background-color: #e2e2e2;
+  cursor: pointer;
+}
