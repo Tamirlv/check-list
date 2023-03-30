@@ -1,0 +1,119 @@
+<ng-scrollbar>
+    <mat-icon class="text-secondary" (click)="dialogRef.close()" style="cursor: pointer;">close</mat-icon>
+    <p class="display-5 text-center">Sign Up</p>
+    <hr class="border-bottom border-warning border-4 mx-auto mb-4" style="width: 40px; opacity: 100%;">
+    <form [formGroup]="signupForm">
+        <div class="row mb-2">
+            <div class="col text-center">
+                <div class="position-relative mx-auto mb-4" style="width: 150px; height: 150px;">
+                    <div *ngIf="!photo" class="btn rounded-circle border border-1 border-warning"
+                        style="width: 150px; height: 150px;" (click)="fileUpload.click()"></div>
+                    <img *ngIf="photo" [src]="transform()" class="rounded-circle border border-1 border-warning"
+                        (click)="fileUpload.click()"
+                        style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;">
+                    <input accept=".jpg,.png,.jpeg" appearance="legacy" class="d-none" type="file" #fileUpload
+                        (change)="onFileSelected($event)">
+                    <button mat-icon-button appearance="legacy"
+                        class="border border-warning bg-light btn-outline-warning position-absolute top-100 start-50 translate-middle"
+                        (click)="fileUpload.click()">
+                        <mat-icon class="text-warning">add_a_photo</mat-icon>
+                    </button>
+                </div>
+                <p>Upload picture</p>
+            </div>
+        </div>
+        <div class="row row-cols-md-2 row-cols-1">
+            <div class="col">
+                <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Username</mat-label>
+                    <input matInput formControlName="user" required>
+                    <mat-error *ngIf="signupForm.controls['user'].errors?.wronguser">
+                        This user is already exists
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" formControlName="password" required>
+                    <mat-error *ngIf="signupForm.controls['password'].invalid">
+                        Wrong password
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <!-- <div class="col">
+                <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Country</mat-label>
+                    <mat-select formControlName="country" required>
+                        <mat-option (click)="chooseCountry(country)" *ngFor="let country of countries"
+                            [value]="country">
+                            {{country}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="legacy" class="w-100" *ngIf="chosenCountry">
+                    <mat-label>Client</mat-label>
+                    <mat-select formControlName="clientId" required>
+                        <mat-option *ngFor="let hatchery of countryHatcheries" [value]="hatchery.hatcheryName">
+                            {{hatchery.hatcheryName}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div> -->
+            <div class="col">
+                <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>First name</mat-label>
+                    <input matInput type="text" formControlName="first_name" required>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Last name</mat-label>
+                    <input matInput type="text" formControlName="last_name" required>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Email</mat-label>
+                    <input matInput type="email" formControlName="email" required>
+                    <mat-error *ngIf="signupForm.controls['email'].errors?.wrongemail">
+                        This email is already registered
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Phone</mat-label>
+                    <input matInput type="tel" formControlName="phone" required>
+                    <mat-error *ngIf="signupForm.controls['phone'].errors?.wrongphone">
+                        This phone number is already registered
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Address</mat-label>
+                    <input matInput type="text" formControlName="address">
+                </mat-form-field>
+            </div>
+            <div class="col-12">
+                <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Role</mat-label>
+                    <mat-select formControlName="permissions" required>
+                        <mat-option value="admin">Aministrator</mat-option>
+                        <mat-option value="manager">Manager</mat-option>
+                        <mat-option value="technician">Technician</mat-option>
+                        <mat-option value="scietific">Scientific</mat-option>
+                        <mat-option value="guest">Guest</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-12">
+                <button [disabled]="signupForm.invalid" class="btn btn-outline-primary w-100"
+                    (click)="signup(signupForm.value)">Sign Up</button>
+            </div>
+        </div>
+    </form>
+</ng-scrollbar>

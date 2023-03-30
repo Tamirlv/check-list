@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>List of Experiment</h1>
+      <br>
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name </th>
+          <td mat-cell style="cursor: pointer;" [routerLink]="['/experiment', element._id]" *matCellDef="let element">
+            {{element.experiment_name}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+          <th mat-header-cell *matHeaderCellDef>Country</th>
+          <td mat-cell *matCellDef="let element"> {{element.country}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="client">
+          <th mat-header-cell *matHeaderCellDef>Client</th>
+          <td mat-cell *matCellDef="let element"> {{element.client}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="incubator">
+          <th mat-header-cell *matHeaderCellDef>Incubator </th>
+          <td mat-cell *matCellDef="let element"> {{element.incubator}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="eggs">
+          <th mat-header-cell *matHeaderCellDef> Eggs </th>
+          <td mat-cell *matCellDef="let element"> {{element.eggs}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="created_date">
+          <th mat-header-cell *matHeaderCellDef> Created Date</th>
+          <td mat-cell *matCellDef="let element"> {{element.created_date | date: 'shortDate' }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="experiment_start_date">
+          <th mat-header-cell *matHeaderCellDef> Experiment Start Date </th>
+          <td mat-cell *matCellDef="let element"> {{element.experiment_start_date | date: 'shortDate'}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/experiment', row._id]"
+          class="exptable"></tr>
+      </table>
+      <br>
+      <button style="width: 100%;" class="btn btn-primary" (click)="openNewExperimentDialog()">Create New
+        Experiment</button>
+    </div>
+  </div>
+</div>

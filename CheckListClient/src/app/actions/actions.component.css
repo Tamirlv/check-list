@@ -1,0 +1,20 @@
+/* th {
+  background-color: #00AFA3;
+  color: white;
+}
+ */
+
+
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+th {
+  background-color: #ffc519;
+  color: black;
+  font-weight: bold;
+}
