@@ -58,15 +58,20 @@
 
                                         <div class="form-outline mb-4">
                                             <label class="form-label" for="form2Example11">Username</label>
-
                                             <input type="email" id="form2Example11" class="form-control"
                                                 formControlName="user" placeholder="Phone number or email address" />
+                                            <mat-error *ngIf="loginForm.controls['user'].errors?.wrongusername">
+                                                Username doesn't exists
+                                            </mat-error>
                                         </div>
                                         <br>
                                         <div class="form-outline mb-4">
                                             <label class="form-label" for="form2Example22">Password</label>
                                             <input type="password" id="form2Example22" class="form-control"
                                                 formControlName="password" />
+                                            <mat-error *ngIf="loginForm.controls['password'].errors?.wrongpassword">
+                                                Wrong password
+                                            </mat-error>
                                         </div>
                                         <br>
                                         <div class="text-center pt-1 mb-5 pb-1">

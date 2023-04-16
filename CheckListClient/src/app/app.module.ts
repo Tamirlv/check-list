@@ -34,6 +34,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectFilterModule } from 'mat-select-filter';
 import { MatSortModule } from '@angular/material/sort';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NewExperimentComponent } from './home/home.component';
 @NgModule({
   declarations: [
@@ -73,7 +75,9 @@ import { NewExperimentComponent } from './home/home.component';
     MatFormFieldModule,
     MatStepperModule,
     MatSelectFilterModule,
-    MatSortModule
+    MatSortModule,
+    MatProgressBarModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]

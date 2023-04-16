@@ -12,8 +12,8 @@ class SoositoryMongoService {
     async getExperiments(req, res) {
         const country = req.query.country;
         const client = req.query.client;
-        let date = new Date();
-        date = date.setDate(date.getDate() - 200).valueOf();
+        // let date = new Date();
+        // date = date.setDate(date.getDate() - 200).valueOf();
         try {
             const experiments = await this.soositoryExperiments.find({ country: country, client: client });
             // const data = experiments.filter((exp) => {
