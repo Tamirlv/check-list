@@ -104,6 +104,9 @@
                     <input name="experimentName" [(ngModel)]="experimentName" matInput id="experimentName" ngModel
                         required>
                 </mat-form-field>
+                <mat-error *ngIf="error">
+                    {{error.error}}
+                </mat-error>
             </div>
         </div>
         <div class="row">
@@ -112,7 +115,7 @@
                     <mat-label>Experiment Predicted Date</mat-label>
                     <div class="col-xs-11">
                         <input matInput [matDatepicker]="picker" [(ngModel)]="experimentPredictedDate"
-                            name="experimentPredictedDate" required>
+                            name="experimentPredictedDate" [min]="date" required>
                     </div>
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
@@ -141,7 +144,8 @@
             <div class="col-md-12">
                 <mat-form-field appearance="fill" class="col-xs-12">
                     <mat-label>Country</mat-label>
-                    <mat-select name="country" [(ngModel)]="country" required>
+                    <mat-select name="country" [(ngModel)]="country" (selectionChange)="countryChanged($event)"
+                        required>
                         <mat-option *ngFor="let country of countries" [value]="country">{{country.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -152,7 +156,8 @@
             <div *ngIf="country" class="col-md-12">
                 <mat-form-field appearance="fill" class="col-xs-12">
                     <mat-label>Client</mat-label>
-                    <mat-select name="client" [(ngModel)]="client" ngModel required>
+                    <mat-select name="client" [(ngModel)]="client" ngModel (selectionChange)="clientChanged($event)"
+                        required>
                         <mat-option *ngFor="let client of country.clients"
                             [value]="client">{{client.clientName}}</mat-option>
                     </mat-select>
@@ -175,7 +180,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                    <button style="width: 100%; margin-bottom: 3%;" type="submit" class="btn btn-success" [disabled]="!f.valid">Create New
+                    <button style="width: 100%; margin-bottom: 3%;" type="submit" class="btn btn-success"
+                        [disabled]="!f.valid">Create New
                         Experiment</button>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12">

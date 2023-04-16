@@ -5,8 +5,9 @@ import { NgForm } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ViewChild } from '@angular/core';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-actions',
@@ -22,7 +23,9 @@ export class ActionsComponent implements OnInit, AfterViewInit {
   constructor(
     private httpService: HttpService,
     public dialog: MatDialog,
-    private _liveAnnouncer: LiveAnnouncer
+    private _liveAnnouncer: LiveAnnouncer,
+    private MatSnackBar: MatSnackBar,
+
   ) {
     this.dataSource = new MatTableDataSource(this.allActions);
   }
@@ -35,7 +38,6 @@ export class ActionsComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
   deleteAction(id: string) {
-    console.log(id);
     this.httpService.deleteAction(id).subscribe((data) => {
       this.getAllActions();
     })
@@ -47,7 +49,10 @@ export class ActionsComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getAllActions();
+      if (result) {
+        this.MatSnackBar.open("Action updated successfully", "", { duration: 2000, panelClass: ['bg-success', 'text-white', 'custom-class'], verticalPosition: "bottom" });
+        this.getAllActions();
+      }
     });
   }
   newAction() {
@@ -55,7 +60,10 @@ export class ActionsComponent implements OnInit, AfterViewInit {
       width: '350px',
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.getAllActions();
+      if (result) {
+        this.MatSnackBar.open(`Action created successfully`, "", { duration: 2000, panelClass: ['bg-success', 'custom-class'], verticalPosition: "bottom" });
+        this.getAllActions();
+      }
     });
   }
   getAllActions() {
@@ -84,6 +92,7 @@ export class addOrEditAction {
   action: any;
   id: string;
   edit = false;
+  error: any;
   approverOptions = ['Software', 'Hardware', 'Operation']
   constructor(
     private httpService: HttpService,
@@ -102,7 +111,6 @@ export class addOrEditAction {
     this.dialogRef.close();
   }
   onSubmit(form: NgForm) {
-    console.log(form.value)
     const newAction: any = {
       action: form.value.action,
       approver: form.value.approver
@@ -110,8 +118,12 @@ export class addOrEditAction {
     if (this.id) {
       newAction['id'] = this.id
     }
-    this.httpService.addOrUpdateAction(newAction).subscribe((data) => {
-      this.dialogRef.close();
+    this.httpService.addOrUpdateAction(newAction).subscribe((data: any) => {
+      if (data.error) {
+        this.error = data;
+      } else {
+        this.dialogRef.close({ changesMade: true });
+      }
     });
   }
 }

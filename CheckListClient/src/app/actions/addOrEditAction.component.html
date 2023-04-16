@@ -39,7 +39,11 @@
                     <mat-label>Action</mat-label>
                     <input matInput [(ngModel)]="action" name="action" required ngModel>
                 </mat-form-field>
+                <mat-error *ngIf="error">
+                    {{error.error}}
+                </mat-error>
             </div>
+
         </div>
 
         <div class="row">

@@ -18,3 +18,7 @@ th {
   color: black;
   font-weight: bold;
 }
+
+::ng-deep .custom-class {
+  color: black;
+}

@@ -20,7 +20,7 @@ export class NewExperimentComponent implements OnInit {
     { name: 'Israel', clients: [{ clientName: 'Kidron', incubators: [1, 2, 3] }] },
     { name: 'Italy', clients: [{ clientName: 'Malo', incubators: [1] }] },
     { name: 'Belgium', clients: [{ clientName: 'Kruisem', incubators: [1, 2, 3] }] },
-    { name: 'United States', clients: [{ clientName: 'Auburn', incubators: [1, 2] }] }];
+    { name: 'USA', clients: [{ clientName: 'Auburn', incubators: [1, 2] }] }];
   constructor(
     private router: Router,
     private httpService: HttpService

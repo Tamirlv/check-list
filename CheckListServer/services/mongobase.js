@@ -57,25 +57,31 @@ class MongoService {
 
     async addOrEditAction(req, res) {
         const data = req.body.params.updates[0].value
-        try {
-            if (data.id) {
-                const update = await this.actions.findOneAndUpdate({ _id: data.id }, {
-                    $set: {
-                        action: data.action,
-                        approver: data.approver
-                    }
-                })
-                res.json(update);
-            } else {
-                const newAction = new this.actions({
-                    action: data.action,
-                    approver: data.approver
-                })
-                const ans = await newAction.save()
-                res.json(ans);
+        const checkAction = await this.actions.find({ action: data.action });
+        if (checkAction.length == 0) {
+            const newAction = new this.actions({
+                action: data.action,
+                approver: data.approver
+            })
+            try {
+                if (data.id) {
+                    const update = await this.actions.findOneAndUpdate({ _id: data.id }, {
+                        $set: {
+                            action: data.action,
+                            approver: data.approver
+                        }
+                    })
+                    res.json(update);
+                } else {
+                    const ans = await newAction.save()
+                    res.json(ans);
+
+                }
+            } catch (err) {
+                res.json({ code: 500, error: err });
             }
-        } catch (err) {
-            res.json({ code: 500, error: err });
+        } else {
+            res.json({ code: 500, error: "Action already exist" });
         }
     }
 
@@ -90,30 +96,36 @@ class MongoService {
     }
     async newExperiment(req, res) {
         const exp = req.body.exp;
-        exp['created_date'] = new Date();
-        const newExperiment = new this.experiments({
-            experiment_name: exp.experiment_name,
-            experiment_start_date: exp.experiment_predicted_date,
-            created_date: new Date(),
-            equipment_type: exp.equipment_type,
-            eggs: exp.eggs,
-            country: exp.country,
-            client: exp.client,
-            incubator: exp.incubator
-        })
-        try {
-            const ans = await newExperiment.save();
-            const experiment = await this.experiments.find({ experiment_name: exp.experiment_name })
-            const id = experiment[0]._id;
-            await this.createExperimentActions(id);
-            const newCalibration = new this.calibration({
-                experiment_id: mongoose.Types.ObjectId(id),
-                tests: []
-            });
-            const ans1 = await newCalibration.save();
-            res.json(id);
-        } catch (err) {
-            res.json({ code: 500, error: err });
+        const expName = exp.experiment_name;
+        const checkName = await this.experiments.find({ experiment_name: expName });
+        if (checkName.length === 0) {
+            exp['created_date'] = new Date();
+            const newExperiment = new this.experiments({
+                experiment_name: exp.experiment_name,
+                experiment_start_date: exp.experiment_predicted_date,
+                created_date: new Date(),
+                equipment_type: exp.equipment_type,
+                eggs: exp.eggs,
+                country: exp.country,
+                client: exp.client,
+                incubator: exp.incubator
+            })
+            try {
+                const ans = await newExperiment.save();
+                const experiment = await this.experiments.find({ experiment_name: exp.experiment_name })
+                const id = experiment[0]._id;
+                await this.createExperimentActions(id);
+                const newCalibration = new this.calibration({
+                    experiment_id: mongoose.Types.ObjectId(id),
+                    tests: []
+                });
+                const ans1 = await newCalibration.save();
+                res.json(id);
+            } catch (err) {
+                res.json({ code: 500, error: err });
+            }
+        } else {
+            res.json({ code: 500, error: "This name already used" })
         }
     }
     async createExperimentActions(id) {
