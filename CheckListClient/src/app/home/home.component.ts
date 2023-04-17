@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     list[0].innerHTML = 'Page: ' + this.page + ' of ' + this.totalPages;
   }
   pageChange(event: any) {
+    console.log(event);
     this.number = event.length;
     this.page = event.pageIndex + 1;
     if (event.length % event.pageSize == 0)
@@ -78,6 +79,13 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   applyFilter(event: any) {
     const filtered = this.experiments.filter((exp: any) => exp.experiment_name.toLowerCase().includes(event.value.toLowerCase()) || exp.country.toLowerCase().includes(event.value.toLowerCase()))
     this.dataSource.data = filtered;
+    if (filtered.length % this.paginator.pageSize == 0) {
+      this.totalPages = filtered.length / this.paginator.pageSize;
+    } else if (filtered.length <= this.paginator.pageSize) {
+      this.totalPages = 1;
+    } else {
+      this.totalPages = Math.round(filtered.length / this.paginator.pageSize) + 1;
+    }
   }
 
   openNewExperimentDialog() {
@@ -88,7 +96,6 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     dialogRef.afterClosed().subscribe(result => {
     });
   }
-
 }
 
 @Component({
