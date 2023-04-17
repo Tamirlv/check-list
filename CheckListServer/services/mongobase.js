@@ -154,11 +154,19 @@ class MongoService {
     }
     async updateActions(req, res) {
         const id = req.body.experiment_id;
-        console.log(req.body.actions)
+        const actions = req.body.actions;
         try {
-            const experiment = await this.checklist.findOneAndUpdate({ experiment_id: mongoose.Types.ObjectId(id) }, { $set: { actions: req.body.actions } });
-            res.json(experiment);
-            // res.json('tamir');
+            const experiment = await this.checklist.findOne({ experiment_id: mongoose.Types.ObjectId(id) });
+            const dbActions = experiment.actions;
+            const newArray = dbActions.map((dbAction) => {
+                const foundElement = actions.find(action => action.activity.action == dbAction.activity.action);
+                if (foundElement)
+                    return foundElement;
+                else
+                    return dbAction
+            })
+            const updateChecklist = await this.checklist.updateOne({ experiment_id: mongoose.Types.ObjectId(id) }, { $set: { actions: newArray } })
+            res.json({ code: 200, updateChecklist });
         } catch (err) {
             res.json({ code: 500, error: err });
         }

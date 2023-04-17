@@ -6,6 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { NewExperimentComponent } from './new-experiment/new-experiment.component';
 import { AdminGuard } from './admin/admin.guard';
+import { MyGuard1 } from './guard/canDeactivateGuard';
 const routes: Routes = [
   {
     path: 'login', component: LoginComponent
@@ -14,7 +15,7 @@ const routes: Routes = [
     path: 'home', component: HomeComponent, canActivate: [AdminGuard]
   },
   {
-    path: 'experiment/:id', component: ExperimentComponent, canActivate: [AdminGuard]
+    path: 'experiment/:id', component: ExperimentComponent, canActivate: [AdminGuard], canDeactivate: [MyGuard1]
   },
   {
     path: 'actions', component: ActionsComponent, canActivate: [AdminGuard]
@@ -28,6 +29,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [MyGuard1]
 })
 export class AppRoutingModule { }
