@@ -193,7 +193,8 @@ export class ExperimentComponent implements OnInit {
     }
     const index = this.modifyActions.findIndex((action: any) => action === check);
     if (index !== -1) {
-      this.modifyActions[index] = check;
+      // this.modifyActions[index] = check;
+      this.modifyActions.splice(index, 1)
     } else {
       this.modifyActions.push(check);
     }

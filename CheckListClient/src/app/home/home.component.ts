@@ -60,20 +60,14 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     list[0].innerHTML = 'Page: ' + this.page + ' of ' + this.totalPages;
   }
   pageChange(event: any) {
-    console.log(event);
     this.number = event.length;
     this.page = event.pageIndex + 1;
-    if (event.length % event.pageSize == 0) {
-      console.log(1);
+    if (event.length % event.pageSize == 0)
       this.totalPages = event.length / event.pageSize;
-    }
-    else if (event.length <= event.pageSize) {
-      console.log(2);
+    else if (event.length <= event.pageSize)
       this.totalPages = 1;
-    } else {
-      console.log(3);
+    else
       this.totalPages = Math.round(event.length / event.pageSize) + 1;
-    }
   }
 
   getPageNumbers() {
@@ -82,7 +76,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     return `${startIndex} - ${endIndex} of ${this.totalItems}`;
   }
   applyFilter(event: any) {
-    const filtered = this.experiments.filter((exp: any) => exp.experiment_name.includes(event.value))
+    const filtered = this.experiments.filter((exp: any) => exp.experiment_name.includes(event.value) || exp.country.toLowerCase().includes(event.value.toLowerCase()))
     this.dataSource.data = filtered;
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Inject, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { HttpService } from '../services/httpService';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NgForm } from '@angular/forms';
@@ -14,11 +14,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './actions.component.html',
   styleUrls: ['./actions.component.css']
 })
-export class ActionsComponent implements OnInit, AfterViewInit {
+export class ActionsComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('paginator') paginator: MatPaginator;
   displayedColumns: string[] = ['edit', 'activity', 'approver', 'delete'];
   allActions: any = [];
   dataSource: any;
+  page: any = 1;
+  totalPages: any;
+  number: number = 0;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     private httpService: HttpService,
@@ -34,8 +37,25 @@ export class ActionsComponent implements OnInit, AfterViewInit {
     this.getAllActions();
   }
 
+  ngAfterViewChecked(): void {
+    const list = document.getElementsByClassName('mat-paginator-range-label');
+    list[0].innerHTML = 'Page: ' + this.page + ' of ' + this.totalPages;
+  }
+
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+  }
+  pageChange(event: any) {
+    this.number = event.length;
+    this.page = event.pageIndex + 1;
+    if (event.length % event.pageSize == 0) {
+      this.totalPages = event.length / event.pageSize;
+    }
+    else if (event.length <= event.pageSize) {
+      this.totalPages = 1;
+    } else {
+      this.totalPages = Math.round(event.length / event.pageSize) + 1;
+    }
   }
   deleteAction(id: string) {
     this.httpService.deleteAction(id).subscribe((data) => {
@@ -71,7 +91,15 @@ export class ActionsComponent implements OnInit, AfterViewInit {
       this.allActions = data;
       this.dataSource.data = this.allActions;
       this.dataSource.paginator = this.paginator;
+      if (this.allActions.length % 10 == 0) {
+        this.totalPages = this.allActions.length / 10;
+      } else if (this.allActions.length <= 10) {
+        this.totalPages = 1;
+      } else {
+        this.totalPages = Math.round(this.allActions.length / 10) + 1;
+      }
     })
+
   }
   announceSortChange(sortState: any) {
     if (sortState.direction) {
