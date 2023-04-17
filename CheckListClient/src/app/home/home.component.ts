@@ -76,7 +76,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     return `${startIndex} - ${endIndex} of ${this.totalItems}`;
   }
   applyFilter(event: any) {
-    const filtered = this.experiments.filter((exp: any) => exp.experiment_name.toLowerCase().includes(event.value.toLowerCase()) || exp.country.toLowerCase().includes(event.value.toLowerCase()))
+    const filtered = this.experiments.filter((exp: any) => exp.experiment_name.includes(event.value) || exp.country.toLowerCase().includes(event.value.toLowerCase()))
     this.dataSource.data = filtered;
   }
 
