@@ -114,11 +114,14 @@
                 <mat-form-field appearance="fill" class="col-xs-12">
                     <mat-label>Experiment Predicted Date</mat-label>
                     <div class="col-xs-11">
+                        <br>
                         <input matInput [matDatepicker]="picker" [(ngModel)]="experimentPredictedDate"
                             name="experimentPredictedDate" [min]="date" required>
                     </div>
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
+                    <div class="col-xs-1">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </div>
                 </mat-form-field>
             </div>
         </div>
