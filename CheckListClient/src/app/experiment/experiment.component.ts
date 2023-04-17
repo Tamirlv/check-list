@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSelectFilterModule } from 'mat-select-filter';
 import { MatStepper } from '@angular/material/stepper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -38,16 +37,19 @@ export class ExperimentComponent implements OnInit {
   user;
   actionsObj: any = {};
   stepper1: any;
-  // softwareActions: any = []
   softwareActionsDataSource: any;
   hardwareActionsDataSource: any;
   operationActionsDataSource: any;
   totalActions: number;
   checkedActions: number = 0;
   percent: any = 0;
+  checkListPropertyHasChanged: boolean = false;
+  calibrationPropertyHasChanged: boolean = false;
+  modifyActions: any = [];
   constructor(
     private httpSerivce: HttpService,
     private route: ActivatedRoute,
+    private router: Router,
     private cookieService: CookieService,
     private MatSnackBar: MatSnackBar,
   ) {
@@ -62,11 +64,6 @@ export class ExperimentComponent implements OnInit {
       hardware: [],
       operation: []
     }
-
-  }
-
-  tamir(event: any) {
-    // this.stepper.selectedIndex = 0;
   }
   ngOnInit(): void {
     this.stepper1 = this.stepper;
@@ -112,14 +109,33 @@ export class ExperimentComponent implements OnInit {
       this.calibrationDataSource.paginator = this.paginator;
     })
   }
-  onCommentChange(event: any, element: any) {
-    element.comment = event.target.value
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHandler(event: BeforeUnloadEvent) {
+    if (this.checkListPropertyHasChanged || this.calibrationPropertyHasChanged) {
+      event.preventDefault();
+      event.returnValue = 'There is unsaved data, Are you sure you want to refresh?';
+    }
   }
-  tamir1() {
-    console.log(this.stepper.selectedIndex);
+
+  homePageNavigate() {
+    this.router.navigate(['/home'])
   }
+
+  onCommentChange(event: any, check: any) {
+    this.checkListPropertyHasChanged = true;
+    check.comment = event.target.value;
+    const index = this.modifyActions.findIndex((action: any) => action === check);
+    if (index !== -1) {
+      this.modifyActions[index] = check;
+    } else {
+      this.modifyActions.push(check);
+    }
+  }
+
   update() {
-    this.httpSerivce.updateActions(this.id, this.actions).subscribe((data) => {
+    console.log(this.modifyActions);
+    this.httpSerivce.updateActions(this.id, this.modifyActions).subscribe((data) => {
       if (data) {
         this.MatSnackBar.open(`CheckList updated successfully`, "", { duration: 2000, panelClass: ['bg-success', 'custom-class'], verticalPosition: "bottom" });
         this.checkedActions = 0;
@@ -127,6 +143,7 @@ export class ExperimentComponent implements OnInit {
           action.checked ? this.checkedActions++ : null;
         })
         this.percent = this.checkedActions / this.totalActions * 100;
+        this.checkListPropertyHasChanged = false;
       }
     })
   }
@@ -141,6 +158,7 @@ export class ExperimentComponent implements OnInit {
       this.calibrationDataSource.data = this.calibrationTests;
       this.experiments = this.experiments.filter((experiment: any) => { return experiment != exp })
       this.experiment = "";
+      this.calibrationPropertyHasChanged = true;
     } else {
       alert('bad soository exp');
     }
@@ -149,6 +167,7 @@ export class ExperimentComponent implements OnInit {
     this.httpSerivce.updateCalibration(this.calibrationTests, this.id).subscribe((data) => {
       if (data) {
         this.MatSnackBar.open(`Calibration table updated successfully`, "", { duration: 2000, panelClass: ['bg-success', 'custom-class'], verticalPosition: "bottom" });
+        this.calibrationPropertyHasChanged = false;
       }
     })
   }
@@ -165,16 +184,19 @@ export class ExperimentComponent implements OnInit {
     }
   }
   onCheck(check: any) {
+    this.checkListPropertyHasChanged = true;
     check.checked = !check.checked;
     if (check.checked) {
       check.checked_by = this.user;
     } else {
       check.checked_by = "";
     }
-  }
-  filteredReturn() {
-
-  }
-  tam() {
+    const index = this.modifyActions.findIndex((action: any) => action === check);
+    if (index !== -1) {
+      this.modifyActions[index] = check;
+    } else {
+      this.modifyActions.push(check);
+    }
+    console.log(this.modifyActions);
   }
 }
