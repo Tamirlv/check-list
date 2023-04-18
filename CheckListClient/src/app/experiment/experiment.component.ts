@@ -134,7 +134,6 @@ export class ExperimentComponent implements OnInit {
   }
 
   update() {
-    console.log(this.modifyActions);
     this.httpSerivce.updateActions(this.id, this.modifyActions).subscribe((data) => {
       if (data) {
         this.MatSnackBar.open(`CheckList updated successfully`, "", { duration: 2000, panelClass: ['bg-success', 'custom-class'], verticalPosition: "bottom" });
@@ -198,6 +197,5 @@ export class ExperimentComponent implements OnInit {
     } else {
       this.modifyActions.push(check);
     }
-    console.log(this.modifyActions);
   }
 }
