@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       } else if (this.experiments.length <= 10) {
         this.totalPages = 1;
       } else {
-        this.totalPages = Math.round(this.experiments.length / 10) + 1;
+        this.totalPages = Math.floor(this.experiments.length / 10) + 1;
       }
     })
   }
@@ -60,7 +60,6 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     list[0].innerHTML = 'Page: ' + this.page + ' of ' + this.totalPages;
   }
   pageChange(event: any) {
-    console.log(event);
     this.number = event.length;
     this.page = event.pageIndex + 1;
     if (event.length % event.pageSize == 0)
@@ -68,7 +67,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     else if (event.length <= event.pageSize)
       this.totalPages = 1;
     else
-      this.totalPages = Math.round(event.length / event.pageSize) + 1;
+      this.totalPages = Math.floor(event.length / event.pageSize) + 1;
   }
 
   getPageNumbers() {
@@ -84,8 +83,10 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     } else if (filtered.length <= this.paginator.pageSize) {
       this.totalPages = 1;
     } else {
-      this.totalPages = Math.round(filtered.length / this.paginator.pageSize) + 1;
+      this.totalPages = Math.floor(filtered.length / this.paginator.pageSize) + 1;
     }
+    const list = document.getElementsByClassName('mat-paginator-range-label');
+    list[0].innerHTML = 'Page: ' + this.page + ' of ' + this.totalPages;
   }
 
   openNewExperimentDialog() {
@@ -148,7 +149,6 @@ export class NewExperimentComponent implements OnInit {
       incubator: parseInt(this.incubator)
     }
     this.httpService.addExperiment(newExperiment).subscribe((data: any) => {
-      console.log(data);
       if (!data.error) {
         this.router.navigate(['/experiment/' + data])
         this.MatSnackBar.open(`Experiment created successfully`, "", { duration: 2000, panelClass: ['bg-success', 'custom-class'], verticalPosition: "bottom" });
